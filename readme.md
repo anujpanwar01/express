@@ -52,7 +52,7 @@ app.use("/", (req, res, next) => {
 
 *If there is no route match it'll go to the home route(/) by default*
 
-
+---
 ### How to get the body or actual data from the request
 ```
 app.use('/product', (req, res) => {
@@ -65,3 +65,18 @@ app.use('/product', (req, res) => {
   res.redirect('/');
 });
 ```
+### solution
+```
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use('/product', (req, res) => {
+  console.log(req.body); // giving me undefined here 
+
+  // this is because we are not parsing the body so we need to add the third party middle ware called -- body-parser --
+
+  // and body-parser should call before we handling routes
+  
+  res.redirect('/');
+});
+```
+---
