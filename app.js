@@ -1,9 +1,19 @@
 const express = require('express');
-
+const bodyParser = require('body-parser');
 const app = express();
 
-app.use('/users', (req, res, next) => {
-  res.send('<h4>Hello users</h4>');
+app.use(bodyParser.urlencoded({ extended: false })); // it's automatically called the next() function
+
+app.use('/add-product', (req, res, next) => {
+  res.send(
+    '<form action="/product" type="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+  );
+});
+
+app.use('/product', (req, res) => {
+  console.log(req.body);
+  //   res.end()
+  res.redirect('/');
 });
 
 // if no route match it'll go into the home route middleware
