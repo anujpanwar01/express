@@ -17,7 +17,7 @@ app.use((req, res, next) => {
   res.send('<h3>Hello</h3>'); // so if we call the next middleware after this it'll not work getting error in console
 });
 ```
-
+---
 ### Handling routes in the middleware
 
 order is matching here for incoming requests like we use the home route("/") first it's never going to the next middleware until unless we are not calling the next function.
@@ -65,18 +65,31 @@ app.use('/product', (req, res) => {
   res.redirect('/');
 });
 ```
-### solution
+---
+### Express provide the Router function to us and it's easy to use 
+
 ```
-app.use(bodyParser.urlencoded({ extended: false }));
+const express = require('express');
 
-app.use('/product', (req, res) => {
-  console.log(req.body); // giving me undefined here 
+const router = express.Router();
 
-  // this is because we are not parsing the body so we need to add the third party middle ware called -- body-parser --
+// it will match the exact path
+router.get('/', function(req, res){
+  res.send("<h1>hello</h1>")
+})
+module.exports = router;
+```
 
-  // and body-parser should call before we handling routes
-  
-  res.redirect('/');
+
+**Note -> get,post or other method will match the exact path like we shown in previous example if i use the 'use' function it will take all request but now it'll only take care of home route**
+
+---
+
+### Handling unhandled routing like if not match anything just return 404 page
+
+```
+// by default use have home("/") path always and use method take tare of methods like "GET" or "POST" etc.
+app.use((req, res, next) => {
+  res.status(404).send('<h4>Page not found</h4>');
 });
 ```
----
