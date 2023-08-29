@@ -5,6 +5,9 @@ const adminRouter = require('./Routers/admin');
 const shopRouter = require('./Routers/shop');
 
 const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(adminRouter);
 app.use(shopRouter);
 
@@ -12,7 +15,7 @@ app.use(shopRouter);
 app.use((req, res, next) => {
   res.status(404).send('<h4>Page not found</h4>');
 });
-app.use(bodyParser.urlencoded({ extended: false })); // it's automatically called the next() function
+// app.use(bodyParser.urlencoded({ extended: false })); // it's automatically called the next() function
 
 app.listen(3000);
 
