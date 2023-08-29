@@ -17,7 +17,9 @@ app.use((req, res, next) => {
   res.send('<h3>Hello</h3>'); // so if we call the next middleware after this it'll not work getting error in console
 });
 ```
+
 ---
+
 ### Handling routes in the middleware
 
 order is matching here for incoming requests like we use the home route("/") first it's never going to the next middleware until unless we are not calling the next function.
@@ -50,23 +52,27 @@ app.use("/", (req, res, next) => {
 });
 ```
 
-*If there is no route match it'll go to the home route(/) by default*
+_If there is no route match it'll go to the home route(/) by default_
 
 ---
+
 ### How to get the body or actual data from the request
+
 ```
 app.use('/product', (req, res) => {
-  console.log(req.body); // giving me undefined here 
+  console.log(req.body); // giving me undefined here
 
   // this is because we are not parsing the body so we need to add the third party middle ware called -- body-parser --
 
   // and body-parser should call before we handling routes
-  
+
   res.redirect('/');
 });
 ```
+
 ---
-### Express provide the Router function to us and it's easy to use 
+
+### Express provide the Router function to us and it's easy to use
 
 ```
 const express = require('express');
@@ -80,7 +86,6 @@ router.get('/', function(req, res){
 module.exports = router;
 ```
 
-
 **Note -> get,post or other method will match the exact path like we shown in previous example if i use the 'use' function it will take all request but now it'll only take care of home route**
 
 ---
@@ -93,3 +98,109 @@ app.use((req, res, next) => {
   res.status(404).send('<h4>Page not found</h4>');
 });
 ```
+
+---
+
+<button style="color:#FFEEF4; background:#9D44C0; padding:10px;border-radius:5px; border:none">Improvement</button>
+
+### If routes have matching some routes parts ->
+
+```
+router.get('/admin/add-product', (req, res, next) => {
+  res.send(
+    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+  );
+});
+
+router.post('/admin/product', (req, res) => {
+  console.log(req.body);
+  res.redirect('/');
+});
+
+```
+
+we can clearly see here <span style="color: #7147ed">**/admin**</span> is matching from the start in both router or middleware.
+
+### Fix for this
+
+we just need to add the matching path in app.js where is entry point of the router.
+
+```
+// app.js
+app.use("/admin", adminRoute)
+
+
+// admin route file
+
+// url will be `/admin/add-products`
+app.get("/add-products",(req, res, next) =>{
+  res.send(
+    '<form action="/product" method="POST"><input type="text" name="title"><button type="submit">Add Product</button></form>'
+    )
+})
+
+```
+
+---
+
+### How to send the html file back to the client where they can visible the html page
+
+<p>I added the absolute path like this "/views" but it's giving me error because it's referring the operating system file path not the project directory</p>
+
+```
+router.get('/', (req, res, next) => {
+  res.sendFile('/views/shop.html');
+});
+
+```
+
+<h3>Solution</h3>
+
+```
+const path = require('path');
+
+/**
+* __dirname -> where the file actually exists like in this case routes folder
+* (.. or ../) -> Go to the one up level where the html file
+* views -> directory of file which we want
+* shop.html -> actual file
+*/
+
+router.get('/', (req, res, next) => {
+  res.sendFile(path.join(__dirname, '..' 'views', 'shop.html'));
+});
+```
+
+<button style="background:#fafafa; color:black; border:none; padding:10px; border-radius:5px">Better approach to handle this directory name</button>
+
+<p>basically we can extract this '..' path using the path library helper function </p>
+
+<h4>helper/path.js</h4>
+
+```
+const path = require('path');
+
+/**
+ * deprecated -> module.exports = path.dirname(process.mainModule.filename);
+ * (mainModule | main) -> app.js entry point of the application
+ * (filename) -> current file import or using
+ */
+module.exports = path.dirname(require.main.filename);
+
+```
+
+<h4>routes/shop.js</h4>
+
+```
+const express = require('express');
+const path = require('path');
+
+const fileDir = require('./../helper/path');
+const router = express.Router();
+
+router.get('/', (req, res, next) => {
+  res.sendFile(path.join(fileDir, 'views', 'shop.html'));
+});
+```
+
+---

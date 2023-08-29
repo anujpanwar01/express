@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 
 const adminRouter = require('./Routers/admin');
 const shopRouter = require('./Routers/shop');
@@ -7,25 +8,26 @@ const shopRouter = require('./Routers/shop');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(adminRouter);
+app.use(express.static(path.join(__dirname, 'public'))); // for static files like css
+// app.use('/admin', adminRouter); // adding the common routes for the adminRouter like -> /admin/add-product
+app.use('/admin', adminRouter);
 app.use(shopRouter);
 
 // 404 page
 app.use((req, res, next) => {
-  res.status(404).send('<h4>Page not found</h4>');
+  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
-// app.use(bodyParser.urlencoded({ extended: false })); // it's automatically called the next() function
 
 app.listen(3000);
+// app.use(bodyParser.urlencoded({ extended: false })); // it's automatically called the next() function
 
 /*
 app.use((req, res, next) => {
-  // next is a function which is called to the next middleware function
+   next is a function which is called to the next middleware function
   console.log('middleware 1');
   next();
 });
-//TODO: if we don't use the next function in previous middleware it will not go to the next middleware
+TODO: if we don't use the next function in previous middleware it will not go to the next middleware
 
 app.use((req, res, next) => {
   console.log('middleware 2'); // at this time we are exiting the code to that in express we can call res.send();
