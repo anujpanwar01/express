@@ -204,3 +204,76 @@ router.get('/', (req, res, next) => {
 ```
 
 ---
+
+### Showing the dynamic content in client side html page
+
+<p>So for that we need to use html template engines which will be useful in reproduce the dynamic content </p>
+
+<h4>There are the three most popular engines -:</h4>
+
+- Pug
+- Ejs
+- Handlebars
+
+### Injecting the template engine into the express
+
+<p>So for that we can use the method provided by express -></p>
+
+```
+app.set('view engine', 'pug');
+
+app.set('views', 'template');
+```
+
+<p>template will be a folder where the pug files are stored.</p>
+
+<h4>Pug</h4>
+
+one example
+
+```
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(http-equiv="X-UA-Compatible" content="IE=edge")
+        meta(name="viewport" content="width=device-width, initial-scale=1.0")
+        title #{docTitle}
+        link(rel="stylesheet" href="/css/main.css")
+        link(rel="stylesheet" href="/css/product.css")
+    body
+        header.main-header
+            nav.main-header__nav
+                ul.main-header__item-list
+                    li.main-header__item
+                        a.active(href="/") Shop
+                    li.main-header__item
+                        a(href="/admin/add-product") Add product
+        main
+            if products.length > 0
+                .grid
+                    each product in products
+                        article.card.product-item
+                            header.card__header
+                                h1.product__title #{product.title}
+                            div.card__image
+                                img(src="https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png" alt="A Book")
+                            div.card__content
+                                h2.product__price $19.90
+                                p.product__description A very interesting book about so many even more interesting things!
+                            .card__actions
+                                button.btn Add to cart
+            else
+                h1 no products
+
+```
+
+### sending the html file to the client in pug
+
+```
+const router = express.Router();
+
+router.get('/', function(req, res) {
+res.render('shop', {data: products, docTitle: 'Shop'}) // don't need to add the shop.pug here because we already defined the engine name
+});
+```

@@ -3,6 +3,7 @@ const path = require('path');
 
 const fileDir = require('./../helper/path');
 const router = express.Router();
+const adminData = require('./admin');
 
 // if we use get instead of of use it will match the exact path
 // if no route match it'll go into the home route middleware
@@ -15,8 +16,10 @@ router.get('/', (req, res, next) => {
    * views -> folder name
    * shop.html -> file name
    */
+  // res.sendFile(path.join(fileDir, 'views', 'shop.html'));
 
-  res.sendFile(path.join(fileDir, 'views', 'shop.html'));
+  const products = adminData.products;
+  res.render('shop', { products, docTitle: 'Shop' });
 });
 
 module.exports = router;

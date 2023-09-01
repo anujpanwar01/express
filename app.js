@@ -2,20 +2,25 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const adminRouter = require('./Routers/admin');
+const adminData = require('./Routers/admin');
 const shopRouter = require('./Routers/shop');
 
 const app = express();
 
+app.set('view engine', 'pug');
+//app.set('views', 'views'); first views is default by express and second views is for our template files
+app.set('views', 'views');
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public'))); // for static files like css
 // app.use('/admin', adminRouter); // adding the common routes for the adminRouter like -> /admin/add-product
-app.use('/admin', adminRouter);
+app.use('/admin', adminData.routes);
 app.use(shopRouter);
 
 // 404 page
 app.use((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+  // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+  res.status(404).render('404');
 });
 
 app.listen(3000);
