@@ -1,22 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const expressHandleBar = require('express-handlebars');
 
 const adminData = require('./Routers/admin');
 const shopRouter = require('./Routers/shop');
 
 const app = express();
 
-app.engine(
-  'hbs',
-  expressHandleBar({
-    layoutDir: 'views/layouts',
-    defaultLayout: 'main-layout.hbs',
-    extname: 'hbs',
-  })
-); // initialize the expressHandleBar
-app.set('view engine', 'hbs'); // same name as we defined in engine
+app.set('view engine', 'ejs'); // same name as we defined in engine
 
 // app.set('view engine', 'pug');
 //app.set('views', 'views'); first views is default by express and second views is for our template files
@@ -53,3 +44,12 @@ app.use((req, res, next) => {
 app.listen(3000);
 
 */
+
+// app.engine(
+//   'hbs',
+//   expressHandleBar({
+//     layoutDir: 'views/layouts',
+//     defaultLayout: 'main-layout.hbs',
+//     extname: 'hbs',
+//   })
+// ); // initialize the expressHandleBar
