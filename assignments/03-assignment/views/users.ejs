@@ -1,0 +1,8 @@
+<%- include("includes/head.ejs") %>
+
+</head>
+<body>
+    <% for(const user of users) { %>
+    <h1><%= user.name %></h1>
+    <% } %>   
+<%- include("includes/end.ejs") %>
