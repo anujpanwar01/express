@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const adminData = require('./Routers/admin');
+const adminRoute = require('./Routers/admin');
 const shopRouter = require('./Routers/shop');
 
 const app = express();
@@ -16,13 +16,13 @@ app.set('views', 'views');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public'))); // for static files like css
 // app.use('/admin', adminRouter); // adding the common routes for the adminRouter like -> /admin/add-product
-app.use('/admin', adminData.routes);
+app.use('/admin', adminRoute);
 app.use(shopRouter);
 
 // 404 page
 app.use((req, res, next) => {
   // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-  res.status(404).render('404', { pageTitle: 'Page not found' });
+  res.status(404).render('404', { pageTitle: 'Page not found', path: '' });
 });
 
 app.listen(3000);
